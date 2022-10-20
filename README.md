@@ -1,4 +1,4 @@
-# Snake_Game
+# Snake Game
 
 ### Author: Nyctophilia58
 ### Language: Python
@@ -11,11 +11,21 @@ This game is a simple game where when snake eats an apple it getss longer in siz
 
 
 ## Steps: 
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
-&emsp; 1. Installing Pygame
+&emsp; 1. Installing Pygame <br/>
+&emsp; 2. Installing Pygame <br/>
+&emsp; 3. Installing Pygame <br/>
+&emsp; 4. Installing Pygame <br/>
+&emsp; 5. Installing Pygame <br/>
+&emsp; 6. Installing Pygame <br/>
+&emsp; 7. Installing Pygame <br/>
 
+### Instructions
+
+- Fork this repository
+- Clone your forked repository
+- Add your scripts
+- Commit and push
+- Create a pull request
+- Star this repository
+- Wait for pull request to merge
+- Celebrate your first step into the open source world and contribute more
