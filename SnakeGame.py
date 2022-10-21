@@ -317,4 +317,4 @@ def game_page():
 
 
 welcome_page()
-game_page()
+
