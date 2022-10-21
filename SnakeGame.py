@@ -133,46 +133,13 @@ class Fruit:
         self.pos = Vector2(self.x, self.y)
 
 
-class Option:
-    hovered = False
-
-    def __init__(self, text, pos):
-        self.text = text
-        self.pos = pos
-        self.set_rect()
-        self.draw()
-
-    def draw(self):
-        self.set_rend()
-        dis.blit(self.rend, self.rect)
-
-    def set_rend(self):
-        self.rend = menu_font.render(self.text, True, self.get_color())
-
-    def get_color(self):
-        if self.hovered:
-            return (255, 255, 255)
-        else:
-            return (100, 100, 100)
-
-    def set_rect(self):
-        self.set_rend()
-        self.rect = self.rend.get_rect()
-        self.rect.topleft = self.pos
-
-
 class Main:
     def __init__(self):
         self.snake = Snake()
         self.fruit = Fruit()
-    #
-    # def main_menu(self):
-    #     pygame.display.set_caption("Menu")
-    #     while True:
-    #         dis.blit(black)
+
 
     def update(self):
-        # self.main_menu()
         self.snake.move_snake()
         self.check_collision()
         self.check_fail()
@@ -256,15 +223,24 @@ display_msg_font = pygame.font.Font(None, 50)
 menu_font = pygame.font.Font(None, 40)
 
 background = pygame.image.load('Pictures/background.png')
-options = [Option("NEW GAME", (150, dis_height/3)),
-           Option("LOAD GAME", (150, dis_height/3 + 50)),
-           Option("OPTIONS", (150, dis_height/3 + 100))]
-
 screen_update = pygame.USEREVENT
 pygame.time.set_timer(screen_update, 150)
 
 main_game = Main()
 
+
+def button(screen, position, text, size, colors="white"):
+    fg = colors
+    font = pygame.font.SysFont("Arial", size)
+    text_render = font.render(text, True, fg)
+    x, y = position
+    return screen.blit(text_render, (x, y))
+
+# def checkForInput(position):
+#     if position[0] in range(x, y) and position[1] in range(self.rect.top,
+#                                                                                       self.rect.bottom):
+#         return True
+#     return False
 
 def message(msg, color, place):
     msg = display_msg_font.render(msg, True, color)
@@ -272,41 +248,13 @@ def message(msg, color, place):
 
 
 def welcome_page():
+    pygame.display.set_caption("SNAKE GAME")
     dis.fill(black)
     dis.blit(background, (0, 0))
     message("***WELCOME TO MY SNAKE GAME***", purple, [100, dis_height / 3 - 100])
-    for option in options:
-        if option.rect.collidepoint(pygame.mouse.get_pos()):
-            option.hovered = True
-        else:
-            option.hovered = False
-        option.draw()
-    pygame.display.update()
-    time.sleep(3)
-
-
-def button(screen, position, text, size, colors = "white on blue"):
-    fg, bg = colors.split(" on ")
-    font = pygame.font.SysFont("Arial", size)
-    text_render = font.render(text, True, fg)
-    x, y, w, h = text_render.get_rect()
-    x, y = position
-    pygame.draw.line(screen, (150, 150, 150), (x, y), (x + w, y), 5)
-    pygame.draw.line(screen, (150, 150, 150), (x, y - 2), (x, y + h), 5)
-    pygame.draw.line(screen, (50, 50, 50), (x, y + h), (x + w, y + h), 5)
-    pygame.draw.line(screen, (50, 50, 50), (x + w, y + h), [x + w, y], 5)
-    pygame.draw.rect(screen, bg, (x, y, w, h))
-    return screen.blit(text_render, (x, y))
-
-
-welcome_page()
-
-
-def menu():
-    welcome_page()
-    b0 = button(dis, (150, dis_height/3), "NEW GAME", 50, "purple on green")
-    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 50, "purple on green")
-    b2 = button(dis, (150, dis_height/3+100), "OPTIONS", 50, "purple on green")
+    b0 = button(dis, (150, dis_height/3), "NEW GAME", 30, "purple")
+    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 30, "purple")
+    b2 = button(dis, (150, dis_height/3+100), "OPTIONS", 30, "purple")
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -314,16 +262,38 @@ def menu():
                 sys.exit()
             if event.type == pygame.MOUSEMOTION:
                 if b0.collidepoint(pygame.mouse.get_pos()):
-                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 50, "white on green")
+                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 30, "white")
                 else:
-                    b0 = button(dis, (150, dis_height/3), "NEW GAME", 50, "purple on green")
-            if event.type == pygame.MOUSEMOTION:
+                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 30, "purple")
+
                 if b1.collidepoint(pygame.mouse.get_pos()):
-                    b1 = button(dis, (150, dis_height / 3+50), "LOAD GAME", 50, "white on green")
+                    b1 = button(dis, (150, dis_height / 3 + 50), "LOAD GAME", 30, "white")
                 else:
-                    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 50, "purple on green")
+                    b1 = button(dis, (150, dis_height / 3 + 50), "LOAD GAME", 30, "purple")
+
+                if b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(dis, (150, dis_height / 3 + 100), "OPTIONS", 30, "white")
+                else:
+                    b2 = button(dis, (150, dis_height / 3 + 100), "OPTIONS", 30, "purple")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    game_page()
+                elif b1.collidepoint(pygame.mouse.get_pos()):
+                    click = 2
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    click = 3
+                break
+        pygame.display.update()
 
 
+def game_page():
+    pygame.display.set_caption("NEW GAME")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
             if event.type == screen_update:
                 main_game.update()
             if event.type == pygame.KEYDOWN:
@@ -346,4 +316,5 @@ def menu():
         clock.tick()
 
 
-menu()
+welcome_page()
+game_page()
