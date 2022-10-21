@@ -1,6 +1,6 @@
 from PIL import Image
 
-image = Image.open("Pictures/game_screen.png")
-new_image = image.resize((100, 100))
-new_image.save('Pictures/game_screen.png')
+image = Image.open("Pictures/menu_page.png")
+new_image = image.resize((400, 400))
+new_image.save('Pictures/menu_page.png')
 new_image.show()
