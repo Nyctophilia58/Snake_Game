@@ -275,42 +275,75 @@ def welcome_page():
     dis.fill(black)
     dis.blit(background, (0, 0))
     message("***WELCOME TO MY SNAKE GAME***", purple, [100, dis_height / 3 - 100])
-
     for option in options:
         if option.rect.collidepoint(pygame.mouse.get_pos()):
             option.hovered = True
         else:
             option.hovered = False
         option.draw()
-
     pygame.display.update()
     time.sleep(3)
 
 
+def button(screen, position, text, size, colors = "white on blue"):
+    fg, bg = colors.split(" on ")
+    font = pygame.font.SysFont("Arial", size)
+    text_render = font.render(text, True, fg)
+    x, y, w, h = text_render.get_rect()
+    x, y = position
+    pygame.draw.line(screen, (150, 150, 150), (x, y), (x + w, y), 5)
+    pygame.draw.line(screen, (150, 150, 150), (x, y - 2), (x, y + h), 5)
+    pygame.draw.line(screen, (50, 50, 50), (x, y + h), (x + w, y + h), 5)
+    pygame.draw.line(screen, (50, 50, 50), (x + w, y + h), [x + w, y], 5)
+    pygame.draw.rect(screen, bg, (x, y, w, h))
+    return screen.blit(text_render, (x, y))
+
+
 welcome_page()
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == screen_update:
-            main_game.update()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP or event.key == pygame.K_KP_8:
-                if main_game.snake.direction.y != 1:
-                    main_game.snake.direction = Vector2(0, -1)
-            if event.key == pygame.K_DOWN or event.key == pygame.K_KP_2:
-                if main_game.snake.direction.y != -1:
-                    main_game.snake.direction = Vector2(0, 1)
-            if event.key == pygame.K_LEFT or event.key == pygame.K_KP_4:
-                if main_game.snake.direction.x != 1:
-                    main_game.snake.direction = Vector2(-1, 0)
-            if event.key == pygame.K_RIGHT or event.key == pygame.K_KP_6:
-                if main_game.snake.direction.x != -1:
-                    main_game.snake.direction = Vector2(1, 0)
 
-    dis.fill(green)
-    main_game.draw_elements()
-    pygame.display.update()
-    clock.tick()
+def menu():
+    welcome_page()
+    b0 = button(dis, (150, dis_height/3), "NEW GAME", 50, "purple on green")
+    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 50, "purple on green")
+    b2 = button(dis, (150, dis_height/3+100), "OPTIONS", 50, "purple on green")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEMOTION:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 50, "white on green")
+                else:
+                    b0 = button(dis, (150, dis_height/3), "NEW GAME", 50, "purple on green")
+            if event.type == pygame.MOUSEMOTION:
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(dis, (150, dis_height / 3+50), "LOAD GAME", 50, "white on green")
+                else:
+                    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 50, "purple on green")
+
+
+            if event.type == screen_update:
+                main_game.update()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP or event.key == pygame.K_KP_8:
+                    if main_game.snake.direction.y != 1:
+                        main_game.snake.direction = Vector2(0, -1)
+                if event.key == pygame.K_DOWN or event.key == pygame.K_KP_2:
+                    if main_game.snake.direction.y != -1:
+                        main_game.snake.direction = Vector2(0, 1)
+                if event.key == pygame.K_LEFT or event.key == pygame.K_KP_4:
+                    if main_game.snake.direction.x != 1:
+                        main_game.snake.direction = Vector2(-1, 0)
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_KP_6:
+                    if main_game.snake.direction.x != -1:
+                        main_game.snake.direction = Vector2(1, 0)
+
+        dis.fill(green)
+        main_game.draw_elements()
+        pygame.display.update()
+        clock.tick()
+
+
+menu()
