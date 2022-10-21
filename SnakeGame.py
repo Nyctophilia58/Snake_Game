@@ -229,6 +229,59 @@ pygame.time.set_timer(screen_update, 150)
 main_game = Main()
 
 
+def button(screen, position, text, size, colors="white"):
+    fg = colors
+    font = pygame.font.SysFont("Arial", size)
+    text_render = font.render(text, True, fg)
+    x, y = position
+    return screen.blit(text_render, (x, y))
+
+
+def message(msg, color, place):
+    msg = display_msg_font.render(msg, True, color)
+    dis.blit(msg, place)
+
+
+def welcome_page():
+    pygame.display.set_caption("SNAKE GAME")
+    dis.fill(black)
+    dis.blit(background, (0, 0))
+    message("***WELCOME TO MY SNAKE GAME***", purple, [100, dis_height / 3 - 100])
+    b0 = button(dis, (150, dis_height/3), "NEW GAME", 30, "purple")
+    b1 = button(dis, (150, dis_height/3+50), "LOAD GAME", 30, "purple")
+    b2 = button(dis, (150, dis_height/3+100), "OPTIONS", 30, "purple")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEMOTION:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 30, "white")
+                else:
+                    b0 = button(dis, (150, dis_height / 3), "NEW GAME", 30, "purple")
+
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(dis, (150, dis_height / 3 + 50), "LOAD GAME", 30, "white")
+                else:
+                    b1 = button(dis, (150, dis_height / 3 + 50), "LOAD GAME", 30, "purple")
+
+                if b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(dis, (150, dis_height / 3 + 100), "OPTIONS", 30, "white")
+                else:
+                    b2 = button(dis, (150, dis_height / 3 + 100), "OPTIONS", 30, "purple")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    game_page()
+                elif b1.collidepoint(pygame.mouse.get_pos()):
+                    click = 2
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    click = 3
+                break
+        pygame.display.update()
+
+
 def game_page():
     pygame.display.set_caption("NEW GAME")
     while True:
@@ -257,4 +310,5 @@ def game_page():
         pygame.display.update()
         clock.tick()
 
-game_page()
+
+welcome_page()
