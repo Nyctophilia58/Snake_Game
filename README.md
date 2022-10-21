@@ -1,23 +1,31 @@
-# Snake Game
+![alt text](https://raw.githubusercontent.com/oikobill/Snake-game/master/buttons/logo.png "Snake Game")![alt text](https://raw.githubusercontent.com/oikobill/Snake-game/master/buttons/app_icon.png "Snake Game")
 
 ### Author: Nyctophilia58
 ### Language: Python
 ### Version: 3.10.7
 
 <br/>
-This is a classic game of snake in app-like form. To run the project just clone the repo, go into the snake-game folder and run the `demo.py` program.
 
-This game is a simple game where when snake eats an apple it getss longer in size and your score increases. If you snake hits any part of its body it will die.
+## This is a classic game of snake in app-like form. 
+### Description:
 
+&emsp; Welcome abrod fellow developer, this is where you'll find a simple snake-apple game which you are free to contribute to. In this game when snake eats an apple it gets longer in size and your score increases. If you snake hits any part of its body it will die.
+You can contribute by submitting your own scripts, also written in python, which you think would be amazing for other people to see.
 
-## Steps: 
-&emsp; 1. Installing Pygame <br/>
-&emsp; 2. Installing Pygame <br/>
-&emsp; 3. Installing Pygame <br/>
-&emsp; 4. Installing Pygame <br/>
-&emsp; 5. Installing Pygame <br/>
-&emsp; 6. Installing Pygame <br/>
-&emsp; 7. Installing Pygame <br/>
+<br/>
+
+### Pictures:
+![alt text](https://raw.githubusercontent.com/Nyctophilia58/Snake_Game/master/Pictures/menu page.png)
+
+### Contribution Guidelines:
+
+- Reporting a bug
+- Discussing the current state of the code
+- Submitting a fix
+- Proposing new features
+- Becoming a maintainer
+
+<br/>
 
 ### Instructions
 
@@ -29,3 +37,5 @@ This game is a simple game where when snake eats an apple it getss longer in siz
 - Star this repository
 - Wait for pull request to merge
 - Celebrate your first step into the open source world and contribute more
+
+<br/>
