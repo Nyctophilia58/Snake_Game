@@ -3,6 +3,7 @@ import sys
 import random
 from pygame.math import Vector2
 import time
+import json
 
 
 class Snake:
@@ -134,10 +135,11 @@ class Fruit:
 
 
 class Main:
+    score = 0
+
     def __init__(self):
         self.snake = Snake()
         self.fruit = Fruit()
-
 
     def update(self):
         self.snake.move_snake()
@@ -148,7 +150,7 @@ class Main:
         self.grass_draw()
         self.fruit.draw_fruit()
         self.snake.draw_snake()
-        self.draw_score()
+        self.score = self.draw_score()
 
     def check_collision(self):
         if self.fruit.pos == self.snake.body[0]:
@@ -162,14 +164,11 @@ class Main:
 
     def check_fail(self):
         if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
-            self.game_over()
+            game_over_page(self.score)
 
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
-                self.game_over()
-
-    def game_over(self):
-        self.snake.reset()
+                self.snake.reset()
 
     def grass_draw(self):
         grass_color = (138, 154, 91)
@@ -197,6 +196,7 @@ class Main:
         pygame.draw.rect(dis, orange, bg_rect)
         dis.blit(value, score_rect)
         dis.blit(apple, apple_rect)
+        return int(score_text)
 
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -219,13 +219,14 @@ clock = pygame.time.Clock()
 
 apple = pygame.image.load('Pictures/apple.png').convert_alpha()
 game_font = pygame.font.Font(None, 25)  # Default font or you can add ttf file
-display_msg_font = pygame.font.Font(None, 50)
+display_msg_font = pygame.font.Font(None, 60)
 menu_font = pygame.font.Font(None, 40)
 
 background = pygame.image.load('Pictures/background.png')
+# bg = pygame.image.load('Pictures/bg.png')
+
 screen_update = pygame.USEREVENT
 pygame.time.set_timer(screen_update, 150)
-
 main_game = Main()
 
 
@@ -238,11 +239,18 @@ def button(screen, position, text, size, colors="white"):
 
 
 def message(msg, color, place):
-    msg = display_msg_font.render(msg, True, color)
+    msg = display_msg_font.render(msg, False, color)
     dis.blit(msg, place)
 
 
+def save_score(name, score):
+    with open("score.txt", "a") as f:
+        f.write(name + "\t" + str(score) + "\n")
+        f.close()
+
+
 def welcome_page():
+    # display()
     pygame.display.set_caption("SNAKE GAME")
     dis.fill(black)
     dis.blit(background, (0, 0))
@@ -277,7 +285,7 @@ def welcome_page():
                 elif b1.collidepoint(pygame.mouse.get_pos()):
                     click = 2
                 elif b2.collidepoint(pygame.mouse.get_pos()):
-                    click = 3
+                    options_page()
                 break
         pygame.display.update()
 
@@ -287,6 +295,8 @@ def game_page():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # with open("saved_data.txt", "w") as saved_file:
+                #     json.dump(Main.draw_score.score_text)
                 pygame.quit()
                 sys.exit()
             if event.type == screen_update:
@@ -304,9 +314,162 @@ def game_page():
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_KP_6:
                     if main_game.snake.direction.x != -1:
                         main_game.snake.direction = Vector2(1, 0)
-
+                if event.key == pygame.K_p:
+                    pause_page()
         dis.fill(white)
         main_game.draw_elements()
+        pygame.display.update()
+        clock.tick()
+
+
+def options_page():
+    pygame.display.set_caption("OPTIONS")
+    dis.blit(background, (0, 0))
+    message("***OPTIONS***", purple, [100, dis_height / 3 - 100])
+    b0 = button(dis, (150, dis_height / 3), "GAME SPEED", 30, "purple")
+    b1 = button(dis, (150, dis_height / 3 + 50), "SOUND", 30, "purple")
+    b2 = button(dis, (150, dis_height / 3 + 100), "SCORE", 30, "purple")
+    b3 = button(dis, (150, dis_height / 3 + 150), "BACK", 30, "purple")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEMOTION:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    b0 = button(dis, (150, dis_height / 3), "GAME SPEED", 30, "white")
+                else:
+                    b0 = button(dis, (150, dis_height / 3), "GAME SPEED", 30, "purple")
+
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(dis, (150, dis_height / 3 + 50), "SOUND", 30, "white")
+                else:
+                    b1 = button(dis, (150, dis_height / 3 + 50), "SOUND", 30, "purple")
+
+                if b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(dis, (150, dis_height / 3 + 100), "SCORE", 30, "white")
+                else:
+                    b2 = button(dis, (150, dis_height / 3 + 100), "SCORE", 30, "purple")
+
+                if b3.collidepoint(pygame.mouse.get_pos()):
+                    b3 = button(dis, (150, dis_height / 3 + 150), "BACK", 30, "white")
+                else:
+                    b3 = button(dis, (150, dis_height / 3 + 150), "BACK", 30, "purple")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    click = 1
+                elif b1.collidepoint(pygame.mouse.get_pos()):
+                    click = 2
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    show_score()
+                elif b3.collidepoint(pygame.mouse.get_pos()):
+                    welcome_page()
+                break
+        pygame.display.update()
+        clock.tick()
+
+
+def game_over_page(score):
+    pygame.display.set_caption("EXIT")
+    dis.blit(background, (0, 0))
+    message(f"Your score is {score}.", purple, (0, 0))
+    message("Your name: ", purple, (0, 50))
+    name = ""
+    input_rect = pygame.Rect(240, 50, 200, 40)
+    color_active = pygame.Color('chartreuse3')
+    color_passive = pygame.Color('azure3')
+    color = color_passive
+    active = False
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_rect.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                color = color_active if active else color_passive
+
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:    # if enter is pressed
+                        save_score(name, score)
+                    elif event.key == pygame.K_BACKSPACE:
+                        name = name[:-1]
+                    else:
+                        name += event.unicode
+        pygame.draw.rect(dis, color, input_rect, 2)
+        text_surface = display_msg_font.render(name, False, purple)
+        dis.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+        input_rect.w = max(200, text_surface.get_width())
+        pygame.display.update()
+        clock.tick()
+
+
+def show_score():
+    pygame.display.set_caption("SCORE")
+    dis.fill((138, 154, 91))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    welcome_page()
+        with open("score.txt", "r") as f:
+            lines = f.readlines()
+            lines = [line.strip() for line in lines]
+            lines = [line.split("\t") for line in lines]
+            lines.sort(key=lambda x: x[1], reverse=True)
+            for j, line in enumerate(lines):
+                message(f"{j + 1}. {line[0]} - {line[1]}", purple, (0, j * 50))
+
+        pygame.display.update()
+
+
+def pause_page():
+    pygame.display.set_caption("PAUSE")
+    dis.blit(background, (0, 0))
+    message("***PAUSE***", purple, [100, dis_height / 3 - 100])
+    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "purple")
+    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "purple")
+    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "purple")
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEMOTION:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "white")
+                else:
+                    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "purple")
+
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "white")
+                else:
+                    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "purple")
+
+                if b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "white")
+                else:
+                    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "purple")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    paused = False
+                elif b1.collidepoint(pygame.mouse.get_pos()):
+                    options_page()
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    game_over_page(main_game.score)
+                break
+
         pygame.display.update()
         clock.tick()
 
