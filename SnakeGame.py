@@ -314,7 +314,8 @@ def game_page():
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_KP_6:
                     if main_game.snake.direction.x != -1:
                         main_game.snake.direction = Vector2(1, 0)
-
+                if event.key == pygame.K_p:
+                    pause_page()
         dis.fill(white)
         main_game.draw_elements()
         pygame.display.update()
@@ -429,6 +430,48 @@ def show_score():
                 message(f"{j + 1}. {line[0]} - {line[1]}", purple, (0, j * 50))
 
         pygame.display.update()
+
+
+def pause_page():
+    pygame.display.set_caption("PAUSE")
+    dis.blit(background, (0, 0))
+    message("***PAUSE***", purple, [100, dis_height / 3 - 100])
+    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "purple")
+    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "purple")
+    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "purple")
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEMOTION:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "white")
+                else:
+                    b0 = button(dis, (150, dis_height / 3), "RESUME", 30, "purple")
+
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "white")
+                else:
+                    b1 = button(dis, (150, dis_height / 3 + 50), "OPTIONS", 30, "purple")
+
+                if b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "white")
+                else:
+                    b2 = button(dis, (150, dis_height / 3 + 100), "EXIT", 30, "purple")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if b0.collidepoint(pygame.mouse.get_pos()):
+                    paused = False
+                elif b1.collidepoint(pygame.mouse.get_pos()):
+                    options_page()
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    game_over_page(main_game.score)
+                break
+
+        pygame.display.update()
+        clock.tick()
 
 
 welcome_page()
